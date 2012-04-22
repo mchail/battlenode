@@ -3,8 +3,37 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
+
+	<script src="js/prefixfree.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="lib/bootstrap/js/bootstrap-modal.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="js/client.js"></script>
+
 </head>
 <body>
-htmling	
+	<p class="message">
+		Waiting for players...
+	</p>
+	<ul class="player_list">
+	</ul>
+
+<div class="modal fade" id="get_name">
+  <div class="modal-header">
+    <h3>Choose display name</h3>
+  </div>
+  <div class="modal-body">
+  	<form onsubmit="return battlenode.getName()">
+	    <input placeholder="Please enter name" type="text" id="display_name"></input>
+  	</form>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary" onclick="battlenode.getName()">done</a>
+  </div>
+</div>
+
 </body>
 </html>

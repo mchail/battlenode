@@ -28,6 +28,27 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
+// Sockets
+
+var io = require('socket.io').listen(app);
+var playerCount = 0;
+var connectionCount = 0;
+
+io.sockets.on('connection', function(socket) {
+  connectionCount++;
+  socket.set('id', connectionCount);‹
+  socket.on('disconnect', function() {
+    playerCount--;
+    io.sockets.emit('num_connected', {count: playerCount});
+  });
+});
+
+io.sockets.on('player_connected', function(socket) {
+  connectionCount++;
+  playerCount++;
+  io.sockets.emit('player_connected', {id: connectionCount, name: name});
+});
+
 // Routes
 
 app.get('/', routes.index);
