@@ -86,6 +86,7 @@ var battlenode = battlenode || {};
 			cell.addClass('drop_help');
 			orientation === 0 ? x++ : y++;
 		}
+		
 	}
 
 	function clearLayout() {
