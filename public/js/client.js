@@ -60,11 +60,36 @@ var battlenode = battlenode || {};
 		for (var i = 0; i < 10; i++) {
 			var ul = $('<ul>');
 			for (var j = 0; j < 10; j++) {
-				var li = $('<li>').addClass('cell' + (10 * i + j));
+				var li = $('<li>');
+				li.attr('data-cell', 10*i+j);
+				li.hover(layoutShip, clearLayout);
 				ul.append(li);
 			};
 			field.append(ul);
 		}
+	}
+
+	function layoutShip() {
+		var hoverCell = parseInt($(this).attr('data-cell'));
+		var orientation = 0; // 0 = vert, 1 = horiz
+		var length = 4;
+		var x = Math.floor(hoverCell/10);
+		var y = hoverCell % 10;
+		var toHighlight = [];
+		if (orientation === 0) {
+			x = x <= 10 - length ? x : 10 - length;
+		} else {
+			y = y <= 10 - length ? y : 10 - length;
+		}
+		for (var i = 0; i < length; i++) {
+			var cell = $('[data-cell=' + (10*x+y) + ']');
+			cell.addClass('drop_help');
+			orientation === 0 ? x++ : y++;
+		}
+	}
+
+	function clearLayout() {
+		$('#field li').removeClass('drop_help');
 	}
 
 	// public

@@ -70,3 +70,7 @@ li.ready {
 	width: 50px;
 	float: left;
 }
+
+#field li.drop_help {
+	background: gray;
+}
