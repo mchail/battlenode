@@ -33,20 +33,43 @@ app.configure('production', function(){
 var io = require('socket.io').listen(app);
 var playerCount = 0;
 var connectionCount = 0;
+var playerList = [];
+var currentPlayer;
 
 io.sockets.on('connection', function(socket) {
   connectionCount++;
-  socket.set('id', connectionCount);‹
+  var playerData = {
+    socket: socket,
+    id: connectionCount,
+    status: "setting up"
+  };
+  var list = [];
+  for (var i = 0; i < playerList.length; i++) {
+    list.push({
+      id: playerList[i].id, 
+      name: playerList[i].name,
+      status: playerList[i].status
+    });
+  };
+  socket.emit('player_list', {list: list});
   socket.on('disconnect', function() {
     playerCount--;
-    io.sockets.emit('num_connected', {count: playerCount});
+    if (playerList.indexOf(playerData) >= 0) {
+      playerList.splice(playerList.indexOf(playerData), 1);
+    }
+    io.sockets.emit('player_disconnected', {id: playerData.id});
   });
-});
-
-io.sockets.on('player_connected', function(socket) {
-  connectionCount++;
-  playerCount++;
-  io.sockets.emit('player_connected', {id: connectionCount, name: name});
+  socket.on('player_connected', function(data) {
+    playerData.name = data.name;
+    playerList.push(playerData);
+    connectionCount++;
+    playerCount++;
+    io.sockets.emit('player_connected', {id: playerData.id, name: data.name});
+  });
+  socket.on('ready', function() {
+    playerData.status = "ready";
+    io.sockets.emit('status_change', {id: playerData.id, status: 'ready'});
+  });
 });
 
 // Routes
